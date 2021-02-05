@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:AnimatedRail/index.dart';
+import 'package:animated_rail/index.dart';
 
 void main() {
   runApp(MyApp());
