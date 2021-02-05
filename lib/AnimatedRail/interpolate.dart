@@ -1,7 +1,7 @@
 double interpolateInternalSingleProc(
     double value, double inS, double inE, double outS, double outE) {
-  double progress = (value - inS) / (inE - inS);
-  double resultForNonZeroRange = (outS + (progress * (outE - outS)));
+  var progress = (value - inS) / (inE - inS);
+  var resultForNonZeroRange = (outS + (progress * (outE - outS)));
   double result;
 
   if (inS == inE) {
@@ -18,10 +18,10 @@ double interpolateInternalSingleProc(
 
 double interpolateInternalSingle(double value, List<double> inputRange,
     List<double> outputRange, int offset) {
-  double inS = inputRange[offset];
-  double inE = inputRange[offset + 1];
-  double outS = outputRange[offset];
-  double outE = outputRange[offset + 1];
+  var inS = inputRange[offset];
+  var inE = inputRange[offset + 1];
+  var outS = outputRange[offset];
+  var outE = outputRange[offset + 1];
   return interpolateInternalSingleProc(value, inS, inE, outS, outE);
 }
 
@@ -43,7 +43,7 @@ void invariant(bool cond, List<String> str) {
 }
 
 void checkNonDecreasing(String name, List<double> arr) {
-  for (int i = 1; i < arr.length; ++i) {
+  for (var i = 1; i < arr.length; ++i) {
     invariant(arr[i] >= arr[i - 1], [
       '%s must be monotonically non-decreasing. (%s)',
       name,
@@ -117,4 +117,3 @@ double interpolate(double value, InterpolateConfig config) {
 
   return output;
 }
-// cl

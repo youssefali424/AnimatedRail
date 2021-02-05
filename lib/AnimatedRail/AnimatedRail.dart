@@ -72,7 +72,7 @@ class _AnimatedRailState extends State<AnimatedRail> {
     }
   }
 
-  _changeIndex(int i) {
+  void _changeIndex(int i) {
     selectedIndexNotifier.value = i;
   }
 

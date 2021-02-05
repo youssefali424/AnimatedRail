@@ -79,7 +79,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   double velocity;
   int selectedIndex = 0;
   InterpolateConfig config;
-  GlobalKey _railKey = GlobalKey();
+  final GlobalKey _railKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -120,7 +120,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     ], extrapolate: Extrapolate.CLAMP);
   }
 
-  snapPoint(
+  double snapPoint(
     double value,
     double velocity,
     List<double> points,
@@ -212,7 +212,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     );
   }
 
-  _onHorizontalDragUpdate(DragUpdateDetails d) {
+  void _onHorizontalDragUpdate(DragUpdateDetails d) {
     setState(() {
       if (widget.direction == TextDirection.ltr) {
         if (width + d.delta.dx > widget.width && !widget.expand) {
@@ -228,21 +228,23 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     });
   }
 
-  _onHorizontalDragEnd(DragEndDetails d) {
-    if (widget.direction == TextDirection.ltr)
+  void _onHorizontalDragEnd(DragEndDetails d) {
+    if (widget.direction == TextDirection.ltr) {
       velocity = d.velocity.pixelsPerSecond.dx;
-    else
+    } else {
       velocity = -d.velocity.pixelsPerSecond.dx;
+    }
     _runAnimation();
     _stopCursorAnimation();
   }
 
-  _onHorizontalDragStart(_) {
+  void _onHorizontalDragStart(_) {
     _controller.stop();
     _runCursorAnimation();
   }
 
-  _onVerticalDragUpdate(DragUpdateDetails d, double maxHeight, double height) {
+  void _onVerticalDragUpdate(
+      DragUpdateDetails d, double maxHeight, double height) {
     if (widget.isStatic) {
       return;
     }
@@ -260,7 +262,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     });
   }
 
-  _buildContent(BoxConstraints constraints) {
+  List<Widget> _buildContent(BoxConstraints constraints) {
     var height = widget.items.length * 100.0;
     var maxHeight = min(constraints.maxHeight, height);
     var theme = Theme.of(context);
@@ -296,7 +298,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                         children: _buildTiles(widget.items, theme),
                       )
                     : ListView(
-                        children: [_buildTiles(widget.items, theme)],
+                        children: _buildTiles(widget.items, theme),
                       )),
           ),
         ),
@@ -336,8 +338,8 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     ];
   }
 
-  _buildTiles(List<RailItem> items, ThemeData theme) {
-    var list = List<Widget>();
+  List<Widget> _buildTiles(List<RailItem> items, ThemeData theme) {
+    var list = <Widget>[];
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
       list.add(_buildTile(item, i, theme));
@@ -345,7 +347,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     return list;
   }
 
-  _buildTile(RailItem item, int i, ThemeData theme) {
+  Widget _buildTile(RailItem item, int i, ThemeData theme) {
     var value = widget.expand ? interpolate(width, config) : 0.0;
     return FlatButton(
       onPressed: () {
@@ -361,7 +363,8 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
       child: Container(
         width: double.infinity,
         child: Stack(
-          overflow: Overflow.visible,
+          // overflow: Overflow.visible,
+          clipBehavior: Clip.none,
           children: [
             SizedBox(
               width: 100,

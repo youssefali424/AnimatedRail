@@ -13,10 +13,9 @@ class PointerPainter extends CustomPainter {
     const pointerHeight = 100;
     const arrowHeight = 20;
 
-    Paint paint = Paint();
-    paint.color = color;
+    var paint = Paint()..color = color;
     var startRadius = (size.height / 2) - (pointerHeight / 2);
-    Path mpath = Path();
+    var mpath = Path();
 
     mpath.moveTo(0, startRadius);
     mpath.quadraticBezierTo(0, (startRadius) + (pointerHeight / 9), 5,
@@ -29,11 +28,11 @@ class PointerPainter extends CustomPainter {
         0,
         startRadius + pointerHeight);
     mpath.lineTo(0, size.height);
-    Paint arrowPaint = Paint()
+    var arrowPaint = Paint()
       ..color = Colors.white
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke;
-    Path arrow = Path()
+    var arrow = Path()
       ..moveTo(5, (size.height / 2) - arrowHeight)
       ..cubicTo(
           25,
@@ -47,7 +46,7 @@ class PointerPainter extends CustomPainter {
     canvas.drawPath(mpath, paint);
     canvas.drawPath(arrow, arrowPaint);
     if (animation > 0) {
-      Paint arrowPaint = Paint()
+      var arrowPaint = Paint()
         ..color = arrowTintColor
         ..strokeWidth = 3
         ..style = PaintingStyle.stroke;
