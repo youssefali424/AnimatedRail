@@ -1,14 +1,74 @@
-# AnimatedRail
+# Animated Naviation Rail for Flutter
 
-A new Flutter package project.
+[![Pub](https://img.shields.io/pub/v/animated_image_list.svg)](https://pub.dev/packages/animated_image_list)
+
+Flutter Animated Naviation Rail with multiple cool effects see example project.
+
+[![Android-Emulator---Pixel_3_XL_API_29_5554-2021-02-05-18-24-381.gif](https://s2.gifyu.com/images/Android-Emulator---Pixel_3_XL_API_29_5554-2021-02-05-18-24-381.gif)](https://gifyu.com/image/UP7F)
 
 ## Getting Started
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+Add the package to your pubspec.yaml:
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+```yaml
+animated_rail: any
+```
+
+In your dart file, import the library:
+
+```Dart
+import 'package:animated_rail/index.dart';
+```
+
+````Dart
+ AnimatedRail(
+        activeColor: Colors.purple,
+        background: hexToColor('#8B77DD'),
+        maxWidth: 275,
+        width: 100,
+        expand: false,
+        isStatic: true,
+        items: [
+          RailItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+              screen: _buildScreen('Home')),
+          RailItem(
+              icon: Icon(Icons.message_outlined),
+              label: 'Messages',
+              screen: _buildScreen('Messages')),
+          RailItem(
+              icon: Icon(Icons.notifications),
+              label: "Notification",
+              screen: _buildScreen('Notification')),
+          RailItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+              screen: _buildScreen('Profile')),
+        ],
+      )
+``` 
+
+### Parameters:
+
+| Name              | Description                                                                                                                                                                                                                                          | Required | Default value     |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------------- |
+| `items`          |the tabs of the rail as a list of object type [RailItem]                                                                                                                                  | required | -                 |
+| `width`        | the width of the rail when it is opened                                                                                                                                                                                    | required        | 100                 |
+| `maxWidth`      | the max width the rai will snap to, active when [exapnd] is equal true                                                                                                                                                                                              | - | 350               |
+| `direction`       | direction of rail if it is on the right or left                                                                                                                                                                                                 | required | TextDirection.ltr               |
+| `iconBackground` | default icon background color if the [RailItem] doesn't have one                                                                                                                                                                                                        | -        | white    |
+| `activeColor`         | default active color for text and icon if the [RailItem] doesn't have one | -        | primary color                 |
+| `iconColor`     | default inactive icon and text color if the [RailItem] doesn't have one                                                                                                                                             | -        | - |
+| `selectedIndex`     | current selected Index dont use it unlessa you want to change the tabs programmatically                                                                                                                                             | -        | 0 |
+| `background`     | background of the rail                                                                                                                                           | -        | 0 |
+| `expand`     | if true the the rail can exapnd and reach [maxWidth] and the animation for text will take effect                                                                                                                                      | -        | true |
+| `isStatic`     | if true the rail will not move vertically                                                                                                                                  | -        | false |
+
+### future features
+- [ ] full custom tab
+- [ ] add more customization to rail item
+- [ ] custom rail pointer
+- [ ] custom rail shape
+
+#### Contributions are more than welcomed
