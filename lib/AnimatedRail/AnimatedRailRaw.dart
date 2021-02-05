@@ -363,7 +363,6 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
       child: Container(
         width: double.infinity,
         child: Stack(
-          // overflow: Overflow.visible,
           clipBehavior: Clip.none,
           children: [
             SizedBox(
