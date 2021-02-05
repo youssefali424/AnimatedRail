@@ -1,6 +1,6 @@
 # Animated Naviation Rail for Flutter
 
-[![Pub](https://img.shields.io/pub/v/animated_image_list.svg)](https://pub.dev/packages/animated_image_list)
+[![Pub](https://img.shields.io/pub/v/animated_rail.svg)](https://pub.dev/packages/animated_rail)
 
 Flutter Animated Naviation Rail with multiple cool effects see example project.
 

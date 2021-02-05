@@ -4,3 +4,6 @@
 ## [0.0.5] - Update minor issues.
 
 * Fix readme, package name and add pedantic analysis.
+## [0.0.7] - Update minor issues.
+
+* Fix readme.
