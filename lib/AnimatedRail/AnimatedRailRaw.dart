@@ -195,12 +195,13 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   @override
   Widget build(BuildContext context) {
     var content = _buildContent(widget.constraints);
+    var translateX = width.clamp(0, widget.width) - widget.width;
     return Positioned(
       left: widget.direction == TextDirection.ltr ? 0 : null,
       right: widget.direction == TextDirection.ltr ? null : 0,
-      width: width + 30,
+      width: width.clamp(widget.width, double.infinity) + 30,
       child: Transform.translate(
-        offset: Offset(0.0, translateY),
+        offset: Offset(translateX, translateY),
         child: Row(
           key: _railKey,
           mainAxisSize: MainAxisSize.max,
@@ -288,7 +289,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
             ).resolve(widget.direction),
             child: Container(
                 height: maxHeight,
-                width: width,
+                width: width.clamp(widget.width, double.infinity),
                 decoration: BoxDecoration(
                   color: widget.background ?? theme.primaryColor,
                 ),
