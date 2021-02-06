@@ -379,7 +379,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                         decoration: BoxDecoration(
                           color: (item.background ??
                               widget.iconBackground ??
-                              theme.textSelectionColor),
+                              theme.textSelectionTheme.selectionColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         margin: const EdgeInsets.only(bottom: 5),

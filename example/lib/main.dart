@@ -89,6 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
         background: hexToColor('#8B77DD'),
         maxWidth: 275,
         width: 100,
+        iconBackground: Colors.transparent,
         items: [
           RailItem(
               icon: Icon(Icons.home),

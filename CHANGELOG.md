@@ -7,3 +7,7 @@
 ## [0.0.7] - Update minor issues.
 
 * Fix readme.
+## [1.0.0] - Official release.
+
+* Closing rail now translates the rail isntead of changing width far more appealing.
+* fix pedantic issues.
