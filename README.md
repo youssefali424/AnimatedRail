@@ -65,6 +65,9 @@ import 'package:animated_rail/index.dart';
 | `expand`         | if true the the rail can exapnd and reach [maxWidth] and the animation for text will take effect | -        | true              |
 | `isStatic`       | if true the rail will not move vertically                                                        | -        | false             |
 
+
+### [Beamer example](https://github.com/slovnicki/beamer/tree/master/examples/animated_rail)
+example using beamer navigation library with back navigation support
 ### future features
 
 - [ ] full custom tab

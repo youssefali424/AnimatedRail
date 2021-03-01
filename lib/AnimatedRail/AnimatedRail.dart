@@ -22,16 +22,16 @@ class AnimatedRail extends StatefulWidget {
   final Color iconBackground;
 
   /// default active color for text and icon if the [RailItem] doesn't have one
-  final Color activeColor;
+  final Color? activeColor;
 
   /// default inactive icon and text color if the [RailItem] doesn't have one
-  final Color iconColor;
+  final Color? iconColor;
 
   /// current selected Index dont use it unlessa you want to change the tabs programmatically
-  final int selectedIndex;
+  final int? selectedIndex;
 
   /// background of the rail
-  final Color background;
+  final Color? background;
 
   /// if true the the rail can exapnd and reach [maxWidth] and the animation for text will take effect default true
   final bool expand;
@@ -39,7 +39,7 @@ class AnimatedRail extends StatefulWidget {
   /// if true the rail will not move vertically default to false
   final bool isStatic;
   const AnimatedRail(
-      {Key key,
+      {Key? key,
       this.width = 100,
       this.maxWidth = 350,
       this.direction = TextDirection.ltr,
@@ -64,11 +64,10 @@ class _AnimatedRailState extends State<AnimatedRail> {
   @override
   void didUpdateWidget(covariant AnimatedRail oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selectedIndex != null) {
+    var index = widget.selectedIndex;
+    if (index != null) {
       selectedIndexNotifier.value =
-          (widget.selectedIndex ?? 0) > (widget.items.length - 1)
-              ? 0
-              : widget.selectedIndex;
+          index > (widget.items.length - 1) ? 0 : index;
     }
   }
 
@@ -91,8 +90,8 @@ class _AnimatedRailState extends State<AnimatedRail> {
               children: [
                 ValueListenableBuilder(
                   valueListenable: selectedIndexNotifier,
-                  builder: (cx, index, _) =>
-                      items.isNotEmpty ? items[index].screen : Container(),
+                  builder: (cx, int? index, _) =>
+                      items.isNotEmpty ? items[index ?? 0].screen : Container(),
                 ),
                 AnimatedRailRaw(
                   constraints: constraints,

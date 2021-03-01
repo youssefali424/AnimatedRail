@@ -11,3 +11,8 @@
 
 * Closing rail now translates the rail isntead of changing width far more appealing.
 * fix pedantic issues.
+
+## [1.0.0-nullsafety.1] - add null safety.
+
+* Add null-safety.
+* mention example with beamer.

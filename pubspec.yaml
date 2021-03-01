@@ -1,10 +1,10 @@
 name: animated_rail
 description: Flutter Animated Navigation Rail with multiple cool effects and options like closing and openeing the rail.
-version: 1.0.0
+version: 1.0.0-nullsafety.1
 homepage: https://github.com/youssefali424/AnimatedRail
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
