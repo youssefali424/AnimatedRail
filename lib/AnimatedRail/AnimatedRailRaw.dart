@@ -11,7 +11,7 @@ class AnimatedRailRaw extends StatefulWidget {
   final BoxConstraints constraints;
 
   /// on tab clicked
-  final ValueChanged<int> onTap;
+  final ValueChanged<int>? onTap;
 
   /// the width of the rail when it is opened default to 100
   final double width;
@@ -29,16 +29,16 @@ class AnimatedRailRaw extends StatefulWidget {
   final Color iconBackground;
 
   /// default active color for text and icon if the [RailItem] doesn't have one
-  final Color activeColor;
+  final Color? activeColor;
 
   /// default inactive icon and text color if the [RailItem] doesn't have one
-  final Color iconColor;
+  final Color? iconColor;
 
   /// current selected Index dont use it unlessa you want to change the tabs programmatically
-  final int selectedIndex;
+  final int? selectedIndex;
 
   /// background of the rail
-  final Color background;
+  final Color? background;
 
   /// if true the the rail can exapnd and reach [maxWidth] and the animation for text will take effect default true
   final bool expand;
@@ -47,8 +47,8 @@ class AnimatedRailRaw extends StatefulWidget {
   final bool isStatic;
 
   const AnimatedRailRaw(
-      {Key key,
-      @required this.constraints,
+      {Key? key,
+      required this.constraints,
       this.width = 100,
       this.maxWidth = 350,
       this.direction = TextDirection.ltr,
@@ -69,16 +69,16 @@ class AnimatedRailRaw extends StatefulWidget {
 
 class _AnimatedRailRawState extends State<AnimatedRailRaw>
     with TickerProviderStateMixin {
-  Animation<double> _animation;
-  AnimationController _controller;
-  Animation<double> _cursorAnimation;
-  AnimationController _cursorAnimationController;
+  late Animation<double> _animation;
+  late AnimationController _controller;
+  late Animation<double> _cursorAnimation;
+  late AnimationController _cursorAnimationController;
   ValueNotifier<double> animationNotifier = ValueNotifier(0);
-  double width;
+  late double width;
   double translateY = 0;
-  double velocity;
-  int selectedIndex = 0;
-  InterpolateConfig config;
+  late double velocity;
+  int? selectedIndex = 0;
+  late InterpolateConfig config;
   final GlobalKey _railKey = GlobalKey();
   @override
   void initState() {
@@ -86,7 +86,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     width = widget.width;
 
     if (widget.selectedIndex != null) {
-      selectedIndex = widget.selectedIndex > (widget.items.length - 1)
+      selectedIndex = widget.selectedIndex! > (widget.items.length - 1)
           ? 0
           : widget.selectedIndex;
     }
@@ -195,13 +195,13 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   @override
   Widget build(BuildContext context) {
     var content = _buildContent(widget.constraints);
-    var translateX = width.clamp(0, widget.width) - widget.width;
+    num translateX = width.clamp(0, widget.width) - widget.width;
     return Positioned(
       left: widget.direction == TextDirection.ltr ? 0 : null,
       right: widget.direction == TextDirection.ltr ? null : 0,
       width: width.clamp(widget.width, double.infinity) + 30,
       child: Transform.translate(
-        offset: Offset(translateX, translateY),
+        offset: Offset(translateX as double, translateY),
         child: Row(
           key: _railKey,
           mainAxisSize: MainAxisSize.max,
@@ -249,7 +249,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     if (widget.isStatic) {
       return;
     }
-    RenderBox getBox = _railKey?.currentContext?.findRenderObject();
+    var getBox = _railKey.currentContext?.findRenderObject() as RenderBox;
     var pos = getBox.localToGlobal(Offset.zero);
     var max = MediaQuery.of(context).size.height;
     if ((pos.dy + d.delta.dy) + height > max && d.delta.dy > 0) {
@@ -327,7 +327,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                 quarterTurns: widget.direction == TextDirection.rtl ? 2 : 0,
                 child: ValueListenableBuilder(
                     valueListenable: animationNotifier,
-                    builder: (cx, value, _) => CustomPaint(
+                    builder: (cx, dynamic value, _) => CustomPaint(
                             painter: PointerPainter(
                           animation: value,
                           color: widget.background ?? theme.primaryColor,
@@ -349,7 +349,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   }
 
   Widget _buildTile(RailItem item, int i, ThemeData theme) {
-    var value = widget.expand ? interpolate(width, config) : 0.0;
+    var value = widget.expand ? interpolate(width, config)! : 0.0;
     return Expanded(
       child: TextButton(
         onPressed: () {
@@ -376,9 +376,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                         child: Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: (item.background ??
-                                widget.iconBackground ??
-                                theme.textSelectionTheme.selectionColor),
+                            color: (item.background ?? widget.iconBackground),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           margin: const EdgeInsets.only(bottom: 5),
@@ -390,7 +388,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                                         theme.primaryColor)
                                     : (item.iconColor ??
                                         widget.iconColor ??
-                                        theme.textTheme?.headline1?.color ??
+                                        theme.textTheme.headline1?.color ??
                                         Colors.black),
                                 size: 35),
                             child: item.icon,
@@ -402,7 +400,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                         child: Opacity(
                           opacity: 1 - value,
                           child: Text(
-                            item.label,
+                            item.label!,
                             style: TextStyle(
                               color: selectedIndex == i
                                   ? (item.activeColor ??
@@ -410,7 +408,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                                       theme.primaryColor)
                                   : (item.iconColor ??
                                       widget.iconColor ??
-                                      theme.textTheme?.headline1?.color ??
+                                      theme.textTheme.headline1?.color ??
                                       Colors.black),
                               fontSize: 15,
                             ),
@@ -433,17 +431,18 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                     padding: const EdgeInsets.only(bottom: 25),
                     child: Center(
                       child: Text(
-                        item.label,
+                        item.label!,
                         style: TextStyle(
-                            fontSize: 30,
-                            color: selectedIndex == i
-                                ? (item.activeColor ??
-                                    widget.activeColor ??
-                                    theme.primaryColor)
-                                : (item.iconColor ??
-                                    widget.iconColor ??
-                                    theme.textTheme?.headline1?.color ??
-                                    Colors.black)),
+                          fontSize: 17,
+                          color: selectedIndex == i
+                              ? (item.activeColor ??
+                                  widget.activeColor ??
+                                  theme.primaryColor)
+                              : (item.iconColor ??
+                                  widget.iconColor ??
+                                  theme.textTheme.headline1?.color ??
+                                  Colors.black),
+                        ),
                       ),
                     ),
                   ),

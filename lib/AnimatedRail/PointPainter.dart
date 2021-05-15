@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 ///painter used to draw the arrow
 class PointerPainter extends CustomPainter {
-  final double animation;
-  final Color arrowTintColor;
-  final Color color;
+  final double? animation;
+  final Color? arrowTintColor;
+  final Color? color;
   PointerPainter(
       {this.animation, this.color, this.arrowTintColor = Colors.purple});
   @override
@@ -13,7 +13,7 @@ class PointerPainter extends CustomPainter {
     const pointerHeight = 100;
     const arrowHeight = 20;
 
-    var paint = Paint()..color = color;
+    var paint = Paint()..color = color!;
     var startRadius = (size.height / 2) - (pointerHeight / 2);
     var mpath = Path();
 
@@ -45,12 +45,12 @@ class PointerPainter extends CustomPainter {
     canvas.drawShadow(mpath, Colors.black, 5.0, false);
     canvas.drawPath(mpath, paint);
     canvas.drawPath(arrow, arrowPaint);
-    if (animation > 0) {
+    if (animation! > 0) {
       var arrowPaint = Paint()
-        ..color = arrowTintColor
+        ..color = arrowTintColor!
         ..strokeWidth = 3
         ..style = PaintingStyle.stroke;
-      final path = createAnimatedPath(arrow, animation);
+      final path = createAnimatedPath(arrow, animation!);
       canvas.drawPath(path, arrowPaint);
     }
   }

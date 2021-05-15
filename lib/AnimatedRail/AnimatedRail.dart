@@ -22,16 +22,16 @@ class AnimatedRail extends StatefulWidget {
   final Color iconBackground;
 
   /// default active color for text and icon if the [RailItem] doesn't have one
-  final Color activeColor;
+  final Color? activeColor;
 
   /// default inactive icon and text color if the [RailItem] doesn't have one
-  final Color iconColor;
+  final Color? iconColor;
 
   /// current selected Index dont use it unlessa you want to change the tabs programmatically
-  final int selectedIndex;
+  final int? selectedIndex;
 
   /// background of the rail
-  final Color background;
+  final Color? background;
 
   /// if true the the rail can exapnd and reach [maxWidth] and the animation for text will take effect default true
   final bool expand;
@@ -39,7 +39,7 @@ class AnimatedRail extends StatefulWidget {
   /// if true the rail will not move vertically default to false
   final bool isStatic;
   const AnimatedRail(
-      {Key key,
+      {Key? key,
       this.width = 100,
       this.maxWidth = 350,
       this.direction = TextDirection.ltr,
@@ -59,7 +59,7 @@ class AnimatedRail extends StatefulWidget {
 
 class _AnimatedRailState extends State<AnimatedRail> {
   // int selectedIndex = 0;
-  ValueNotifier<int> selectedIndexNotifier = ValueNotifier(0);
+  ValueNotifier<int?> selectedIndexNotifier = ValueNotifier(0);
 
   @override
   void didUpdateWidget(covariant AnimatedRail oldWidget) {
@@ -91,7 +91,7 @@ class _AnimatedRailState extends State<AnimatedRail> {
               children: [
                 ValueListenableBuilder(
                   valueListenable: selectedIndexNotifier,
-                  builder: (cx, index, _) =>
+                  builder: (cx, dynamic index, _) =>
                       items.isNotEmpty ? items[index].screen : Container(),
                 ),
                 AnimatedRailRaw(

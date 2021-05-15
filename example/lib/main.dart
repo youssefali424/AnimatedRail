@@ -75,6 +75,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 icon: Icon(Icons.person),
                 label: 'Profile',
                 screen: _buildTest('Profile')),
+            RailItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+                screen: _buildTest('Profile')),
+            RailItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+                screen: _buildTest('Profile')),
+            RailItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+                screen: _buildTest('Profile')),
           ],
         ),
       ),
