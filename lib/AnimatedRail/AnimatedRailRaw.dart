@@ -350,42 +350,60 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
 
   Widget _buildTile(RailItem item, int i, ThemeData theme) {
     var value = widget.expand ? interpolate(width, config) : 0.0;
-    return FlatButton(
-      onPressed: () {
-        widget.onTap?.call(i);
-        if (selectedIndex == i) return;
-        setState(() {
-          selectedIndex = i;
-        });
-      },
-      height: 100,
-      minWidth: 100,
-      padding: const EdgeInsets.all(0),
-      child: Container(
-        width: double.infinity,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: (item.background ??
-                              widget.iconBackground ??
-                              theme.textSelectionTheme.selectionColor),
-                          borderRadius: BorderRadius.circular(10),
+    return Expanded(
+      child: TextButton(
+        onPressed: () {
+          widget.onTap?.call(i);
+          if (selectedIndex == i) return;
+          setState(() {
+            selectedIndex = i;
+          });
+        },
+        child: Container(
+          width: double.infinity,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              SizedBox(
+                width: 100,
+                height: 100,
+                child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: (item.background ??
+                                widget.iconBackground ??
+                                theme.textSelectionTheme.selectionColor),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          margin: const EdgeInsets.only(bottom: 5),
+                          child: IconTheme(
+                            data: IconThemeData(
+                                color: selectedIndex == i
+                                    ? (item.activeColor ??
+                                        widget.activeColor ??
+                                        theme.primaryColor)
+                                    : (item.iconColor ??
+                                        widget.iconColor ??
+                                        theme.textTheme?.headline1?.color ??
+                                        Colors.black),
+                                size: 35),
+                            child: item.icon,
+                          ),
                         ),
-                        margin: const EdgeInsets.only(bottom: 5),
-                        child: IconTheme(
-                          child: item.icon,
-                          data: IconThemeData(
+                      ),
+                      Transform.translate(
+                        offset: Offset(0, value * -25),
+                        child: Opacity(
+                          opacity: 1 - value,
+                          child: Text(
+                            item.label,
+                            style: TextStyle(
                               color: selectedIndex == i
                                   ? (item.activeColor ??
                                       widget.activeColor ??
@@ -394,17 +412,30 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                                       widget.iconColor ??
                                       theme.textTheme?.headline1?.color ??
                                       Colors.black),
-                              size: 35),
+                              fontSize: 15,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                          ),
                         ),
-                      ),
-                    ),
-                    Transform.translate(
-                      offset: Offset(0, value * -25),
-                      child: Opacity(
-                        opacity: 1 - value,
-                        child: Text(
-                          item.label,
-                          style: TextStyle(
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Positioned.directional(
+                start: value * 100,
+                textDirection: widget.direction,
+                child: Opacity(
+                  opacity: value,
+                  child: Container(
+                    height: 100,
+                    padding: const EdgeInsets.only(bottom: 25),
+                    child: Center(
+                      child: Text(
+                        item.label,
+                        style: TextStyle(
+                            fontSize: 30,
                             color: selectedIndex == i
                                 ? (item.activeColor ??
                                     widget.activeColor ??
@@ -412,45 +443,14 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                                 : (item.iconColor ??
                                     widget.iconColor ??
                                     theme.textTheme?.headline1?.color ??
-                                    Colors.black),
-                            fontSize: 15,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                        ),
+                                    Colors.black)),
                       ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Positioned.directional(
-              child: Opacity(
-                opacity: value,
-                child: Container(
-                  height: 100,
-                  padding: const EdgeInsets.only(bottom: 25),
-                  child: Center(
-                    child: Text(
-                      item.label,
-                      style: TextStyle(
-                          fontSize: 30,
-                          color: selectedIndex == i
-                              ? (item.activeColor ??
-                                  widget.activeColor ??
-                                  theme.primaryColor)
-                              : (item.iconColor ??
-                                  widget.iconColor ??
-                                  theme.textTheme?.headline1?.color ??
-                                  Colors.black)),
                     ),
                   ),
                 ),
-              ),
-              start: value * 100,
-              textDirection: widget.direction,
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

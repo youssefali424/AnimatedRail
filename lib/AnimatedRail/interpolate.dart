@@ -38,7 +38,7 @@ double interpolateInternal(
 
 void invariant(bool cond, List<String> str) {
   if (!cond) {
-    throw (str.join(" "));
+    throw (str.join(' '));
   }
 }
 
