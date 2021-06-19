@@ -103,7 +103,8 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     direction = widget.direction;
     var index = widget.selectedIndex;
     if (index != null) {
-      selectedIndexNotifier.value = index > (widget.items.length - 1) ? 0 : index;
+      selectedIndexNotifier.value =
+          index > (widget.items.length - 1) ? 0 : index;
     }
 
     _controller =
@@ -198,7 +199,8 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     }
     var index = widget.selectedIndex;
     if (index != null) {
-      selectedIndexNotifier.value = index > (widget.items.length - 1) ? 0 : index;
+      selectedIndexNotifier.value =
+          index > (widget.items.length - 1) ? 0 : index;
     }
     if (selectedIndexNotifier.value >= widget.items.length) {
       selectedIndexNotifier.value = 0;
