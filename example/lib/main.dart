@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:animated_rail/index.dart';
+import 'package:animated_rail/animated_rail.dart';
 
 void main() {
   runApp(MyApp());
@@ -89,7 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
         background: hexToColor('#8B77DD'),
         maxWidth: 275,
         width: 100,
-        iconBackground: Colors.transparent,
+        expandedTextStyle: TextStyle(fontSize: 25),
+        collapsedTextStyle: TextStyle(fontSize: 17),
         items: [
           RailItem(
               icon: Icon(Icons.home),

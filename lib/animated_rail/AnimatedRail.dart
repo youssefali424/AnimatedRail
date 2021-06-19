@@ -22,36 +22,50 @@ class AnimatedRail extends StatefulWidget {
   final Color iconBackground;
 
   /// default active color for text and icon if the [RailItem] doesn't have one
-  final Color activeColor;
+  final Color? activeColor;
 
   /// default inactive icon and text color if the [RailItem] doesn't have one
-  final Color iconColor;
+  final Color? iconColor;
 
   /// current selected Index dont use it unlessa you want to change the tabs programmatically
-  final int selectedIndex;
+  final int? selectedIndex;
 
   /// background of the rail
-  final Color background;
+  final Color? background;
 
   /// if true the the rail can exapnd and reach [maxWidth] and the animation for text will take effect default true
   final bool expand;
 
   /// if true the rail will not move vertically default to false
   final bool isStatic;
-  const AnimatedRail(
-      {Key key,
-      this.width = 100,
-      this.maxWidth = 350,
-      this.direction = TextDirection.ltr,
-      this.items = const [],
-      this.iconBackground = Colors.white,
-      this.activeColor,
-      this.iconColor,
-      this.selectedIndex,
-      this.background,
-      this.expand = true,
-      this.isStatic = false})
-      : super(key: key);
+
+  /// style of text when the rail is expanded
+  final TextStyle? expandedTextStyle;
+
+  /// style of text when the rail is collapsed
+  final TextStyle? collapsedTextStyle;
+
+  /// icon size for each tile
+  final double? iconSize;
+
+  const AnimatedRail({
+    Key? key,
+    this.width = 100,
+    this.maxWidth = 350,
+    this.direction = TextDirection.ltr,
+    this.items = const [],
+    this.iconBackground = Colors.white,
+    this.activeColor,
+    this.iconColor,
+    this.selectedIndex,
+    this.background,
+    this.expand = true,
+    this.isStatic = false,
+    this.collapsedTextStyle,
+    this.expandedTextStyle,
+    this.iconSize,
+  })  : assert(expand && maxWidth > width),
+        super(key: key);
 
   @override
   _AnimatedRailState createState() => _AnimatedRailState();
@@ -64,11 +78,13 @@ class _AnimatedRailState extends State<AnimatedRail> {
   @override
   void didUpdateWidget(covariant AnimatedRail oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selectedIndex != null) {
+    var index = widget.selectedIndex;
+    if (index != null) {
       selectedIndexNotifier.value =
-          (widget.selectedIndex ?? 0) > (widget.items.length - 1)
-              ? 0
-              : widget.selectedIndex;
+          index > (widget.items.length - 1) ? 0 : index;
+    }
+    if (selectedIndexNotifier.value >= widget.items.length) {
+      selectedIndexNotifier.value = 0;
     }
   }
 
@@ -91,8 +107,8 @@ class _AnimatedRailState extends State<AnimatedRail> {
               children: [
                 ValueListenableBuilder(
                   valueListenable: selectedIndexNotifier,
-                  builder: (cx, index, _) =>
-                      items.isNotEmpty ? items[index].screen : Container(),
+                  builder: (cx, int? index, _) =>
+                      items.isNotEmpty ? items[index ?? 0].screen : Container(),
                 ),
                 AnimatedRailRaw(
                   constraints: constraints,
@@ -108,6 +124,9 @@ class _AnimatedRailState extends State<AnimatedRail> {
                   onTap: _changeIndex,
                   expand: widget.expand,
                   isStatic: widget.isStatic,
+                  expandedTextStyle: widget.expandedTextStyle,
+                  collapsedTextStyle: widget.collapsedTextStyle,
+                  iconSize: widget.iconSize,
                 )
               ],
             );

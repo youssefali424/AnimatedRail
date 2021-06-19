@@ -7,7 +7,9 @@ class PointerPainter extends CustomPainter {
   final Color arrowTintColor;
   final Color color;
   PointerPainter(
-      {this.animation, this.color, this.arrowTintColor = Colors.purple});
+      {this.animation = 0.0,
+      this.color = Colors.black,
+      this.arrowTintColor = Colors.purple});
   @override
   void paint(Canvas canvas, Size size) {
     const pointerHeight = 100;

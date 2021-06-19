@@ -38,7 +38,7 @@ double interpolateInternal(
 
 void invariant(bool cond, List<String> str) {
   if (!cond) {
-    throw (str.join(" "));
+    throw (str.join(' '));
   }
 }
 
@@ -67,8 +67,8 @@ class InterpolateConfig {
   List<double> inputRange;
   List<double> outputRange;
   Extrapolate extrapolate;
-  Extrapolate extrapolateLeft;
-  Extrapolate extrapolateRight;
+  Extrapolate? extrapolateLeft;
+  Extrapolate? extrapolateRight;
   InterpolateConfig(this.inputRange, this.outputRange,
       {this.extrapolate = Extrapolate.EXTEND,
       this.extrapolateLeft,

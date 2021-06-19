@@ -4,7 +4,7 @@
 
 Flutter Animated Naviation Rail with multiple cool effects see example project.
 
-[![Android-Emulator---Pixel_3_XL_API_29_5554-2021-02-05-18-24-381.gif](https://s2.gifyu.com/images/Android-Emulator---Pixel_3_XL_API_29_5554-2021-02-05-18-24-381.gif)](https://gifyu.com/image/UP7F)
+[![Android-Emulator---Pixel_3_XL_API_29_5554-2021-06-19-11-48-34.gif](https://s6.gifyu.com/images/Android-Emulator---Pixel_3_XL_API_29_5554-2021-06-19-11-48-34.gif)](https://gifyu.com/image/1C6y)
 
 ## Getting Started
 
@@ -65,6 +65,9 @@ import 'package:animated_rail/index.dart';
 | `expand`         | if true the the rail can exapnd and reach [maxWidth] and the animation for text will take effect | -        | true              |
 | `isStatic`       | if true the rail will not move vertically                                                        | -        | false             |
 
+
+### [Beamer example](https://github.com/slovnicki/beamer/tree/master/examples/animated_rail)
+example using beamer navigation library with back navigation support
 ### future features
 
 - [ ] full custom tab
