@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'RailTile.dart';
 import 'interpolate.dart';
 import 'package:flutter/material.dart';
 import 'PointPainter.dart';
@@ -10,7 +11,8 @@ class AnimatedRailRaw extends StatefulWidget {
   /// current layout constraints required to position and calculate multiple animation values
   final BoxConstraints constraints;
 
-  /// on tab clicked
+  /// on any tab clicked  , called whenever a tab is clicked not tab change
+  /// use [onChange] for tab change callback
   final ValueChanged<int>? onTap;
 
   /// the width of the rail when it is opened default to 100
@@ -20,7 +22,7 @@ class AnimatedRailRaw extends StatefulWidget {
   final double maxWidth;
 
   /// direction of rail if it is on the right or left
-  final TextDirection direction;
+  final TextDirection? direction;
 
   /// the tabs of the rail as a list of object type [RailItem]
   final List<RailItem> items;
@@ -46,22 +48,35 @@ class AnimatedRailRaw extends StatefulWidget {
   /// if true the rail will not move vertically default to false
   final bool isStatic;
 
-  const AnimatedRailRaw(
-      {Key? key,
-      this.constraints = const BoxConstraints(),
-      this.width = 100,
-      this.maxWidth = 350,
-      this.direction = TextDirection.ltr,
-      this.items = const [],
-      this.iconBackground,
-      this.activeColor,
-      this.iconColor,
-      this.selectedIndex,
-      this.background,
-      this.onTap,
-      this.expand = true,
-      this.isStatic = false})
-      : super(key: key);
+  final TextStyle? expandedTextStyle;
+
+  final TextStyle? collapsedTextStyle;
+
+  final double? iconSize;
+
+  /// on tab index changed
+  final ValueChanged<int>? onChange;
+
+  const AnimatedRailRaw({
+    Key? key,
+    this.constraints = const BoxConstraints(),
+    this.width = 100,
+    this.maxWidth = 350,
+    this.direction,
+    this.items = const [],
+    this.iconBackground,
+    this.activeColor,
+    this.iconColor,
+    this.selectedIndex,
+    this.background,
+    this.onTap,
+    this.expand = true,
+    this.isStatic = false,
+    this.collapsedTextStyle,
+    this.expandedTextStyle,
+    this.iconSize,
+    this.onChange,
+  }) : super(key: key);
 
   @override
   _AnimatedRailRawState createState() => _AnimatedRailRawState();
@@ -77,16 +92,18 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   late double width;
   double translateY = 0;
   double? velocity;
-  int selectedIndex = 0;
+  ValueNotifier<int> selectedIndexNotifier = ValueNotifier(0);
   late InterpolateConfig config;
   final GlobalKey _railKey = GlobalKey();
+  late TextDirection? direction;
   @override
   void initState() {
     super.initState();
     width = widget.width;
+    direction = widget.direction;
     var index = widget.selectedIndex;
     if (index != null) {
-      selectedIndex = index > (widget.items.length - 1) ? 0 : index;
+      selectedIndexNotifier.value = index > (widget.items.length - 1) ? 0 : index;
     }
 
     _controller =
@@ -155,6 +172,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   void dispose() {
     _cursorAnimationController.dispose();
     _controller.dispose();
+    animationNotifier.dispose();
     super.dispose();
   }
 
@@ -162,6 +180,10 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   void didUpdateWidget(covariant AnimatedRailRaw oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget != widget) {
+      if (oldWidget.direction != widget.direction) {
+        // width = widget.width;
+        direction = widget.direction;
+      }
       if (width == oldWidget.width) {
         width = widget.width;
       } else if (width == oldWidget.maxWidth) {
@@ -176,7 +198,10 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     }
     var index = widget.selectedIndex;
     if (index != null) {
-      selectedIndex = index > (widget.items.length - 1) ? 0 : index;
+      selectedIndexNotifier.value = index > (widget.items.length - 1) ? 0 : index;
+    }
+    if (selectedIndexNotifier.value >= widget.items.length) {
+      selectedIndexNotifier.value = 0;
     }
     config = InterpolateConfig([
       widget.width,
@@ -193,16 +218,17 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   Widget build(BuildContext context) {
     var content = _buildContent(widget.constraints);
     var translateX = width.clamp(0, widget.width) - widget.width;
+    var direction = widget.direction ?? Directionality.of(context);
     return Positioned(
-      left: widget.direction == TextDirection.ltr ? 0 : null,
-      right: widget.direction == TextDirection.ltr ? null : 0,
+      left: direction == TextDirection.ltr ? 0 : null,
+      right: direction == TextDirection.ltr ? null : 0,
       width: width.clamp(widget.width, double.infinity) + 30,
       child: Transform.translate(
         offset: Offset(translateX, translateY),
         child: Row(
           key: _railKey,
           mainAxisSize: MainAxisSize.max,
-          children: widget.direction == TextDirection.rtl
+          children: direction == TextDirection.rtl
               ? content.reversed.toList()
               : content,
         ),
@@ -211,8 +237,9 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails d) {
+    var direction = widget.direction ?? Directionality.of(context);
     setState(() {
-      if (widget.direction == TextDirection.ltr) {
+      if (direction == TextDirection.ltr) {
         if (width + d.delta.dx > widget.width && !widget.expand) {
           return;
         }
@@ -227,7 +254,8 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   }
 
   void _onHorizontalDragEnd(DragEndDetails d) {
-    if (widget.direction == TextDirection.ltr) {
+    var direction = widget.direction ?? Directionality.of(context);
+    if (direction == TextDirection.ltr) {
       velocity = d.velocity.pixelsPerSecond.dx;
     } else {
       velocity = -d.velocity.pixelsPerSecond.dx;
@@ -264,6 +292,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     var height = widget.items.length * 100.0;
     var maxHeight = min(constraints.maxHeight, height);
     var theme = Theme.of(context);
+    var direction = widget.direction ?? Directionality.of(context);
     return [
       GestureDetector(
         onHorizontalDragUpdate: _onHorizontalDragUpdate,
@@ -279,25 +308,18 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
           elevation: 10.0,
           borderRadius: BorderRadiusDirectional.horizontal(
             end: Radius.circular(20),
-          ).resolve(widget.direction),
+          ).resolve(direction),
           child: ClipRRect(
             borderRadius: BorderRadiusDirectional.horizontal(
               end: Radius.circular(20),
-            ).resolve(widget.direction),
+            ).resolve(direction),
             child: Container(
-                height: maxHeight,
+                constraints: BoxConstraints(maxHeight: constraints.maxHeight),
                 width: width.clamp(widget.width, double.infinity),
                 decoration: BoxDecoration(
                   color: widget.background ?? theme.primaryColor,
                 ),
-                child: maxHeight == height
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _buildTiles(widget.items, theme),
-                      )
-                    : ListView(
-                        children: _buildTiles(widget.items, theme),
-                      )),
+                child: _buildTiles(widget.items, theme)),
           ),
         ),
       ),
@@ -321,7 +343,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
               height: 100,
               width: 100,
               child: RotatedBox(
-                quarterTurns: widget.direction == TextDirection.rtl ? 2 : 0,
+                quarterTurns: direction == TextDirection.rtl ? 2 : 0,
                 child: ValueListenableBuilder(
                     valueListenable: animationNotifier,
                     builder: (cx, double value, _) => CustomPaint(
@@ -337,120 +359,48 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     ];
   }
 
-  List<Widget> _buildTiles(List<RailItem> items, ThemeData theme) {
-    var list = <Widget>[];
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      list.add(_buildTile(item, i, theme));
-    }
-    return list;
-  }
+  Widget _buildTiles(List<RailItem> items, ThemeData theme) {
+    var direction = widget.direction ?? Directionality.of(context);
+    var percentage = widget.expand ? interpolate(width, config) : 0.0;
 
-  Widget _buildTile(RailItem item, int i, ThemeData theme) {
-    var value = widget.expand ? interpolate(width, config) : 0.0;
-    return FlatButton(
-      onPressed: () {
-        widget.onTap?.call(i);
-        if (selectedIndex == i) return;
-        setState(() {
-          selectedIndex = i;
+    return ValueListenableBuilder<int>(
+        valueListenable: selectedIndexNotifier,
+        builder: (context, currentSelectedIndex, _) {
+          return ListView(
+            children: items.asMap().entries.map((entry) {
+              var item = entry.value;
+              var index = entry.key;
+              return RailTile(
+                widthPercentage: percentage,
+                direction: direction,
+                icon: item.icon,
+                backgroundColor: (item.background ??
+                    widget.iconBackground ??
+                    theme.textSelectionTheme.selectionColor),
+                iconColor: currentSelectedIndex == index
+                    ? (item.activeColor ??
+                        widget.activeColor ??
+                        theme.primaryColor)
+                    : (item.iconColor ??
+                        widget.iconColor ??
+                        theme.textTheme.headline1?.color ??
+                        Colors.black),
+                onTap: () {
+                  widget.onTap?.call(index);
+                  if (currentSelectedIndex == index) return;
+                  widget.onChange?.call(index);
+                  selectedIndexNotifier.value = index;
+                },
+                label: item.label,
+                collapsedTextStyle: widget.collapsedTextStyle,
+                expandedTextStyle: widget.expandedTextStyle,
+                iconSize: widget.iconSize,
+                minWidth: widget.width,
+              );
+            }).toList(),
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
+          );
         });
-      },
-      height: 100,
-      minWidth: 100,
-      padding: const EdgeInsets.all(0),
-      child: Container(
-        width: double.infinity,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: (item.background ??
-                              widget.iconBackground ??
-                              theme.textSelectionTheme.selectionColor),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        margin: const EdgeInsets.only(bottom: 5),
-                        child: IconTheme(
-                          child: item.icon,
-                          data: IconThemeData(
-                              color: selectedIndex == i
-                                  ? (item.activeColor ??
-                                      widget.activeColor ??
-                                      theme.primaryColor)
-                                  : (item.iconColor ??
-                                      widget.iconColor ??
-                                      theme.textTheme.headline1?.color ??
-                                      Colors.black),
-                              size: 35),
-                        ),
-                      ),
-                    ),
-                    Transform.translate(
-                      offset: Offset(0, value * -25),
-                      child: Opacity(
-                        opacity: 1 - value,
-                        child: Text(
-                          item.label ?? '',
-                          style: TextStyle(
-                            color: selectedIndex == i
-                                ? (item.activeColor ??
-                                    widget.activeColor ??
-                                    theme.primaryColor)
-                                : (item.iconColor ??
-                                    widget.iconColor ??
-                                    theme.textTheme.headline1?.color ??
-                                    Colors.black),
-                            fontSize: 15,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Positioned.directional(
-              child: Opacity(
-                opacity: value,
-                child: Container(
-                  height: 100,
-                  padding: const EdgeInsets.only(bottom: 25),
-                  child: Center(
-                    child: Text(
-                      item.label ?? '',
-                      style: TextStyle(
-                          fontSize: 30,
-                          color: selectedIndex == i
-                              ? (item.activeColor ??
-                                  widget.activeColor ??
-                                  theme.primaryColor)
-                              : (item.iconColor ??
-                                  widget.iconColor ??
-                                  theme.textTheme.headline1?.color ??
-                                  Colors.black)),
-                    ),
-                  ),
-                ),
-              ),
-              start: value * 100,
-              textDirection: widget.direction,
-            )
-          ],
-        ),
-      ),
-    );
   }
 }

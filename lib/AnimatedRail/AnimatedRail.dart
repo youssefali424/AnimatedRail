@@ -38,20 +38,34 @@ class AnimatedRail extends StatefulWidget {
 
   /// if true the rail will not move vertically default to false
   final bool isStatic;
-  const AnimatedRail(
-      {Key? key,
-      this.width = 100,
-      this.maxWidth = 350,
-      this.direction = TextDirection.ltr,
-      this.items = const [],
-      this.iconBackground = Colors.white,
-      this.activeColor,
-      this.iconColor,
-      this.selectedIndex,
-      this.background,
-      this.expand = true,
-      this.isStatic = false})
-      : super(key: key);
+
+  /// style of text when the rail is expanded
+  final TextStyle? expandedTextStyle;
+
+  /// style of text when the rail is collapsed
+  final TextStyle? collapsedTextStyle;
+
+  /// icon size for each tile
+  final double? iconSize;
+
+  const AnimatedRail({
+    Key? key,
+    this.width = 100,
+    this.maxWidth = 350,
+    this.direction = TextDirection.ltr,
+    this.items = const [],
+    this.iconBackground = Colors.white,
+    this.activeColor,
+    this.iconColor,
+    this.selectedIndex,
+    this.background,
+    this.expand = true,
+    this.isStatic = false,
+    this.collapsedTextStyle,
+    this.expandedTextStyle,
+    this.iconSize,
+  })  : assert(expand && maxWidth > width),
+        super(key: key);
 
   @override
   _AnimatedRailState createState() => _AnimatedRailState();
@@ -68,6 +82,9 @@ class _AnimatedRailState extends State<AnimatedRail> {
     if (index != null) {
       selectedIndexNotifier.value =
           index > (widget.items.length - 1) ? 0 : index;
+    }
+    if (selectedIndexNotifier.value >= widget.items.length) {
+      selectedIndexNotifier.value = 0;
     }
   }
 
@@ -107,6 +124,9 @@ class _AnimatedRailState extends State<AnimatedRail> {
                   onTap: _changeIndex,
                   expand: widget.expand,
                   isStatic: widget.isStatic,
+                  expandedTextStyle: widget.expandedTextStyle,
+                  collapsedTextStyle: widget.collapsedTextStyle,
+                  iconSize: widget.iconSize,
                 )
               ],
             );

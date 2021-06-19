@@ -16,3 +16,10 @@
 
 * Add null-safety.
 * mention example with beamer.
+
+## [1.0.5] - Stable null safety.
+
+* Fix some bugs.
+* First stable null safe release.
+* More customizable.
+* Code Refactor.
