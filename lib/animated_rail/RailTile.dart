@@ -1,4 +1,3 @@
-import 'package:animated_rail/AnimatedRail/interpolate.dart';
 import 'package:flutter/material.dart';
 
 class RailTile extends StatelessWidget {
