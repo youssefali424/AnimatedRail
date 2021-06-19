@@ -24,3 +24,7 @@
 * More customizable.
 * Code Refactor.
 * Update example.
+
+## [1.0.6] - refactor.
+* Update readme.
+* Code Refactor.
