@@ -28,3 +28,8 @@
 ## [1.0.6] - refactor.
 * Update readme.
 * Code Refactor.
+
+## [1.1.0] - upgrade.
+* Update readme.
+* Code Refactor.
+* fix lints.
