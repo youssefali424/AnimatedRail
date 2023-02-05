@@ -4,7 +4,7 @@
 
 Flutter Animated Naviation Rail with multiple cool effects see example project.
 
-[![Android-Emulator---Pixel_3_XL_API_29_5554-2021-06-19-11-48-34.gif](https://s6.gifyu.com/images/Android-Emulator---Pixel_3_XL_API_29_5554-2021-06-19-11-48-34.gif)](https://gifyu.com/image/1C6y)
+[![example.gif](https://github.com/youssefali424/animated_image_list/blob/master/example.gif?raw=true)]
 
 ## Getting Started
 

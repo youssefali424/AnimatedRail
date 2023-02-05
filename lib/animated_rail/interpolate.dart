@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 double interpolateInternalSingleProc(
     double value, double inS, double inE, double outS, double outE) {
   var progress = (value - inS) / (inE - inS);
