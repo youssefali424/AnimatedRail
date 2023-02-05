@@ -32,7 +32,7 @@ class RailTile extends StatelessWidget {
     print(widthPercentage);
     return TextButton(
       style: TextButton.styleFrom(
-          primary: Colors.red,
+          foregroundColor: Colors.red,
           padding: const EdgeInsets.all(0),
           minimumSize: Size(100, 100) // foreground
           ),

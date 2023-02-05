@@ -1,9 +1,7 @@
-import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'AnimatedRailRaw.dart';
-import 'RailItem.dart';
+import 'rail_item.dart';
+import 'animated_rail_raw.dart';
 
 class AnimatedRail extends StatefulWidget {
   /// the width of the rail when it is opened default to 100

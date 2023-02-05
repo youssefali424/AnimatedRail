@@ -1,4 +1,3 @@
-import 'AnimatedRailRaw.dart';
 import 'package:flutter/material.dart';
 
 /// rail item used by the Animated rail as a tab

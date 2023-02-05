@@ -1,11 +1,11 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'RailTile.dart';
+import 'rail_tile.dart';
 import 'interpolate.dart';
 import 'package:flutter/material.dart';
-import 'PointPainter.dart';
-import 'RailItem.dart';
+import 'point_painter.dart';
+import 'rail_item.dart';
 
 class AnimatedRailRaw extends StatefulWidget {
   /// current layout constraints required to position and calculate multiple animation values
@@ -56,6 +56,9 @@ class AnimatedRailRaw extends StatefulWidget {
 
   /// on tab index changed
   final ValueChanged<int>? onChange;
+
+  // /// direction of rail if it is on the right or left
+  // final Axis? directionAxis;
 
   const AnimatedRailRaw({
     Key? key,
@@ -369,6 +372,8 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
         valueListenable: selectedIndexNotifier,
         builder: (context, currentSelectedIndex, _) {
           return ListView(
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
             children: items.asMap().entries.map((entry) {
               var item = entry.value;
               var index = entry.key;
@@ -400,8 +405,6 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                 minWidth: widget.width,
               );
             }).toList(),
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
           );
         });
   }
