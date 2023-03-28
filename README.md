@@ -22,12 +22,20 @@ import 'package:animated_rail/index.dart';
 
 ```Dart
   AnimatedRail(
-        activeColor: Colors.purple,
         background: hexToColor('#8B77DD'),
         maxWidth: 275,
         width: 100,
         expand: false,
         isStatic: true,
+        railTileConfig: RailTileConfig(
+            iconSize: 22,
+            iconColor: Colors.white,
+            expandedTextStyle: TextStyle(fontSize: 15),
+            collapsedTextStyle: TextStyle(fontSize: 12, color: Colors.white),
+            activeColor: Colors.indigo,
+            iconPadding: EdgeInsets.symmetric(vertical: 5),
+            hideCollapsedText: true,
+        ),
         items: [
           RailItem(
               icon: Icon(Icons.home),
@@ -57,21 +65,17 @@ import 'package:animated_rail/index.dart';
 | `width`          | the width of the rail when it is opened                                                          | required | 100               |
 | `maxWidth`       | the max width the rai will snap to, active when [exapnd] is equal true                           | -        | 350               |
 | `direction`      | direction of rail if it is on the right or left                                                  | required | TextDirection.ltr |
-| `iconBackground` | default icon background color if the [RailItem] doesn't have one                                 | -        | white             |
-| `activeColor`    | default active color for text and icon if the [RailItem] doesn't have one                        | -        | primary color     |
-| `iconColor`      | default inactive icon and text color if the [RailItem] doesn't have one                          | -        | -                 |
 | `selectedIndex`  | current selected Index dont use it unlessa you want to change the tabs programmatically          | -        | 0                 |
 | `background`     | background of the rail                                                                           | -        | 0                 |
 | `expand`         | if true the the rail can exapnd and reach [maxWidth] and the animation for text will take effect | -        | true              |
 | `isStatic`       | if true the rail will not move vertically                                                        | -        | false             |
-
-
-### [Beamer example](https://github.com/slovnicki/beamer/tree/master/examples/animated_rail)
-example using beamer navigation library with back navigation support
+ |`railTileConfig`       | Rail tile config                                                    | -        | -             |
+ |`cursorSize`       | Size of cursor                                                    | -        | Size(100,100)            |
+  |`cursorActionType`       | adds click trigger option to use on cursor                                                    | -        | CursorActionTrigger.drag             |
 ### future features
 
-- [ ] full custom tab
-- [ ] add more customization to rail item
+- [x] full custom tab
+- [x] add more customization to rail item
 - [ ] custom rail pointer
 - [ ] custom rail shape
 

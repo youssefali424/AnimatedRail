@@ -33,3 +33,12 @@
 * Update readme.
 * Code Refactor.
 * fix lints.
+
+## [2.0.0] - major release.
+* Add config for rail item
+* Add more customizable options 
+* Add custom builder for items
+* cursor size option
+* Trigger options for cursor
+* fix sizing issues
+* fix drag limits
