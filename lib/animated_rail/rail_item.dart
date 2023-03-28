@@ -1,3 +1,4 @@
+import 'package:animated_rail/animated_rail/animated_rail_raw.dart';
 import 'package:flutter/material.dart';
 
 /// rail item used by the Animated rail as a tab
@@ -14,12 +15,15 @@ class RailItem {
   Widget screen;
 
   /// default icon background color
+  /// overrides [AnimatedRailRaw.iconBackground]
   final Color? background;
 
   /// default active color for text and icon
+  /// overrides [AnimatedRailRaw.activeColor]
   final Color? activeColor;
 
   /// default inactive icon and text color
+  /// overrides [AnimatedRailRaw.iconColor]
   final Color? iconColor;
 
   RailItem({
@@ -29,5 +33,36 @@ class RailItem {
     this.background,
     this.activeColor,
     this.iconColor,
+  });
+}
+
+class RailTileConfig {
+  final EdgeInsetsGeometry? iconPadding;
+
+  /// style of text when the rail is expanded
+  final TextStyle? expandedTextStyle;
+
+  /// style of text when the rail is collapsed
+  final TextStyle? collapsedTextStyle;
+
+  /// icon size for each tile
+  final double? iconSize;
+
+  /// default icon background color if the [RailItem] doesn't have one
+  final Color? iconBackground;
+
+  /// default active color for text and icon if the [RailItem] doesn't have one
+  final Color? activeColor;
+
+  /// default inactive icon and text color if the [RailItem] doesn't have one
+  final Color? iconColor;
+  const RailTileConfig({
+    this.iconBackground,
+    this.activeColor,
+    this.iconColor,
+    this.collapsedTextStyle,
+    this.expandedTextStyle,
+    this.iconSize,
+    this.iconPadding,
   });
 }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'rail_item.dart';
 import 'animated_rail_raw.dart';
@@ -7,7 +6,7 @@ class AnimatedRail extends StatefulWidget {
   /// the width of the rail when it is opened default to 100
   final double width;
 
-  /// the max width the rai will snap to, active when [exapnd] is equal true
+  /// the max width the rai will snap to, active when [expand] is equal true
   final double maxWidth;
 
   /// direction of rail if it is on the right or left
@@ -15,15 +14,6 @@ class AnimatedRail extends StatefulWidget {
 
   /// the tabs of the rail as a list of object type [RailItem]
   final List<RailItem> items;
-
-  /// default icon background color if the [RailItem] doesn't have one
-  final Color iconBackground;
-
-  /// default active color for text and icon if the [RailItem] doesn't have one
-  final Color? activeColor;
-
-  /// default inactive icon and text color if the [RailItem] doesn't have one
-  final Color? iconColor;
 
   /// current selected Index dont use it unlessa you want to change the tabs programmatically
   final int? selectedIndex;
@@ -37,31 +27,27 @@ class AnimatedRail extends StatefulWidget {
   /// if true the rail will not move vertically default to false
   final bool isStatic;
 
-  /// style of text when the rail is expanded
-  final TextStyle? expandedTextStyle;
+  /// custom builder for each item
+  final ItemBuilder? builder;
 
-  /// style of text when the rail is collapsed
-  final TextStyle? collapsedTextStyle;
+  /// dragable cursor size for the rail
+  final Size? cursorSize;
 
-  /// icon size for each tile
-  final double? iconSize;
-
+  /// config for rail tile
+  final RailTileConfig? railTileConfig;
   const AnimatedRail({
     Key? key,
     this.width = 100,
     this.maxWidth = 350,
     this.direction = TextDirection.ltr,
     this.items = const [],
-    this.iconBackground = Colors.white,
-    this.activeColor,
-    this.iconColor,
     this.selectedIndex,
     this.background,
     this.expand = true,
     this.isStatic = false,
-    this.collapsedTextStyle,
-    this.expandedTextStyle,
-    this.iconSize,
+    this.builder,
+    this.cursorSize,
+    this.railTileConfig,
   })  : assert(expand && maxWidth > width),
         super(key: key);
 
@@ -112,19 +98,16 @@ class _AnimatedRailState extends State<AnimatedRail> {
                   constraints: constraints,
                   items: widget.items,
                   width: widget.width,
-                  activeColor: widget.activeColor,
-                  iconColor: widget.iconColor,
                   background: widget.background,
                   direction: widget.direction,
                   maxWidth: widget.maxWidth,
                   selectedIndex: widget.selectedIndex,
-                  iconBackground: widget.iconBackground,
                   onTap: _changeIndex,
                   expand: widget.expand,
                   isStatic: widget.isStatic,
-                  expandedTextStyle: widget.expandedTextStyle,
-                  collapsedTextStyle: widget.collapsedTextStyle,
-                  iconSize: widget.iconSize,
+                  railTileConfig: widget.railTileConfig,
+                  builder: widget.builder,
+                  cursorSize: widget.cursorSize,
                 )
               ],
             );

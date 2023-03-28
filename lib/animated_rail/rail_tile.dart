@@ -12,6 +12,7 @@ class RailTile extends StatelessWidget {
   final double? iconSize;
   final double minWidth;
   final double widthPercentage;
+  final EdgeInsetsGeometry? iconPadding;
   const RailTile({
     Key? key,
     required this.direction,
@@ -25,16 +26,16 @@ class RailTile extends StatelessWidget {
     this.iconSize,
     required this.minWidth,
     required this.widthPercentage,
+    this.iconPadding,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print(widthPercentage);
     return TextButton(
       style: TextButton.styleFrom(
           foregroundColor: Colors.red,
           padding: const EdgeInsets.all(0),
-          minimumSize: Size(100, 100) // foreground
+          minimumSize: Size(0, 0) // foreground
           ),
       onPressed: () {
         onTap?.call();
@@ -46,7 +47,6 @@ class RailTile extends StatelessWidget {
           children: [
             SizedBox(
               width: minWidth,
-              // height: 100,
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Column(
@@ -55,13 +55,13 @@ class RailTile extends StatelessWidget {
                     Flexible(
                       child: Container(
                         width: double.infinity,
-                        // height: 100,
-                        constraints: BoxConstraints(minHeight: 60),
                         decoration: BoxDecoration(
                           color: backgroundColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         margin: const EdgeInsets.only(bottom: 5),
+                        padding: iconPadding ??
+                            const EdgeInsets.symmetric(vertical: 10),
                         child: IconTheme(
                           child: icon,
                           data: IconThemeData(
@@ -84,7 +84,7 @@ class RailTile extends StatelessWidget {
                                 fontSize: 15,
                               ),
                           maxLines: 1,
-                          overflow: TextOverflow.fade,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     )

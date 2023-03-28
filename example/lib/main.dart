@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -53,13 +53,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _buildTest(String title) {
+  Widget _buildTest(String title) {
     return Container(
       color: Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
       child: Center(
-        child: Text(
-          title,
-          style: TextStyle(fontSize: 40, color: Colors.white),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontSize: 40, color: Colors.white),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => NewCustomizations()));
+                },
+                child: Text('new customizations')),
+          ],
         ),
       ),
     );
@@ -85,12 +96,17 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
           child: AnimatedRail(
-        activeColor: Colors.purple,
         background: hexToColor('#8B77DD'),
         maxWidth: 275,
         width: 100,
-        expandedTextStyle: TextStyle(fontSize: 25),
-        collapsedTextStyle: TextStyle(fontSize: 17),
+        railTileConfig: RailTileConfig(
+          iconSize: 30,
+          iconColor: Colors.black,
+          expandedTextStyle: TextStyle(fontSize: 25),
+          collapsedTextStyle: TextStyle(fontSize: 17),
+          activeColor: Colors.purple,
+          iconBackground: Colors.white,
+        ),
         items: [
           RailItem(
               icon: Icon(Icons.home),
@@ -110,6 +126,64 @@ class _MyHomePageState extends State<MyHomePage> {
               screen: _buildTest('Profile')),
         ],
       )),
+    );
+  }
+}
+
+class NewCustomizations extends StatelessWidget {
+  const NewCustomizations({Key? key}) : super(key: key);
+  Widget _buildScreen(String title) {
+    return Container(
+      color: Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+      child: Center(
+        child: Text(
+          title,
+          style: TextStyle(fontSize: 40, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        AppBar(),
+        Expanded(
+          child: AnimatedRail(
+            background: Colors.indigo,
+            maxWidth: 275,
+            width: 100,
+            railTileConfig: RailTileConfig(
+              iconSize: 18,
+              iconColor: Colors.white,
+              expandedTextStyle: TextStyle(fontSize: 25, color: Colors.white),
+              collapsedTextStyle: TextStyle(fontSize: 12, color: Colors.white),
+              activeColor: Colors.purple,
+              iconPadding: EdgeInsets.all(0),
+            ),
+            cursorSize: Size(70, 70),
+            items: [
+              RailItem(
+                  icon: Icon(Icons.home),
+                  label: "Home",
+                  screen: _buildScreen('Home')),
+              RailItem(
+                  icon: Icon(Icons.message_outlined),
+                  label: 'Messages',
+                  screen: _buildScreen('Messages')),
+              RailItem(
+                  icon: Icon(Icons.notifications),
+                  label: "Notification",
+                  screen: _buildScreen('Notification')),
+              RailItem(
+                  icon: Icon(Icons.person),
+                  label: 'Profile',
+                  screen: _buildScreen('Profile')),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

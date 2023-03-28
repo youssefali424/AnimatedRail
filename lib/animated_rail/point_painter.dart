@@ -6,23 +6,29 @@ class PointerPainter extends CustomPainter {
   final double animation;
   final Color arrowTintColor;
   final Color color;
-  PointerPainter(
-      {this.animation = 0.0,
-      this.color = Colors.black,
-      this.arrowTintColor = Colors.purple});
+  final double pointerHeight;
+  PointerPainter({
+    this.animation = 0.0,
+    this.color = Colors.black,
+    this.arrowTintColor = Colors.purple,
+    this.pointerHeight = 100,
+  });
   @override
   void paint(Canvas canvas, Size size) {
-    const pointerHeight = 100;
-    const arrowHeight = 20;
+    // const pointerHeight = 100;
+    final arrowHeight = pointerHeight / 5;
 
     var paint = Paint()..color = color;
     var startRadius = (size.height / 2) - (pointerHeight / 2);
     var mpath = Path();
 
     mpath.moveTo(0, startRadius);
-    mpath.quadraticBezierTo(0, (startRadius) + (pointerHeight / 9), 5,
-        startRadius + (pointerHeight / 7));
-    mpath.quadraticBezierTo(55, (size.height / 2), 5,
+    mpath.quadraticBezierTo(0, (startRadius) + (pointerHeight / 9),
+        pointerHeight / 20, startRadius + (pointerHeight / 7));
+    mpath.quadraticBezierTo(
+        pointerHeight * 55 / 100,
+        (size.height / 2),
+        pointerHeight / 20,
         (startRadius + pointerHeight) - (pointerHeight / 7));
     mpath.quadraticBezierTo(
         0,
@@ -35,13 +41,13 @@ class PointerPainter extends CustomPainter {
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke;
     var arrow = Path()
-      ..moveTo(5, (size.height / 2) - arrowHeight)
+      ..moveTo(pointerHeight / 20, (size.height / 2) - arrowHeight)
       ..cubicTo(
-          25,
+          pointerHeight / 4,
           (size.height / 2) + (arrowHeight * 0.1),
-          25,
+          pointerHeight / 4,
           (size.height / 2) + (arrowHeight * 0.1),
-          5,
+          pointerHeight / 20,
           (size.height / 2) + arrowHeight)
       ..fillType = PathFillType.nonZero;
     canvas.drawShadow(mpath, Colors.black, 5.0, false);

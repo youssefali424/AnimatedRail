@@ -1,11 +1,16 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:animated_rail/animated_rail/animated_rail.dart';
+
 import 'rail_tile.dart';
 import 'interpolate.dart';
 import 'package:flutter/material.dart';
 import 'point_painter.dart';
 import 'rail_item.dart';
+
+typedef ItemBuilder = Widget Function(
+    BuildContext context, int index, RailItem item, bool selected);
 
 class AnimatedRailRaw extends StatefulWidget {
   /// current layout constraints required to position and calculate multiple animation values
@@ -18,7 +23,7 @@ class AnimatedRailRaw extends StatefulWidget {
   /// the width of the rail when it is opened default to 100
   final double width;
 
-  /// the max width the rai will snap to, active when [exapnd] is equal true
+  /// the max width the rail will snap to, active when [expand] is equal true
   final double maxWidth;
 
   /// direction of rail if it is on the right or left
@@ -26,15 +31,6 @@ class AnimatedRailRaw extends StatefulWidget {
 
   /// the tabs of the rail as a list of object type [RailItem]
   final List<RailItem> items;
-
-  /// default icon background color if the [RailItem] doesn't have one
-  final Color? iconBackground;
-
-  /// default active color for text and icon if the [RailItem] doesn't have one
-  final Color? activeColor;
-
-  /// default inactive icon and text color if the [RailItem] doesn't have one
-  final Color? iconColor;
 
   /// current selected Index dont use it unlessa you want to change the tabs programmatically
   final int? selectedIndex;
@@ -48,17 +44,17 @@ class AnimatedRailRaw extends StatefulWidget {
   /// if true the rail will not move vertically default to false
   final bool isStatic;
 
-  final TextStyle? expandedTextStyle;
-
-  final TextStyle? collapsedTextStyle;
-
-  final double? iconSize;
-
   /// on tab index changed
   final ValueChanged<int>? onChange;
 
-  // /// direction of rail if it is on the right or left
-  // final Axis? directionAxis;
+  /// custom builder for each item
+  final ItemBuilder? builder;
+
+  /// dragable cursor size for the rail
+  final Size? cursorSize;
+
+  /// config for rail tile
+  final RailTileConfig? railTileConfig;
 
   const AnimatedRailRaw({
     Key? key,
@@ -67,18 +63,15 @@ class AnimatedRailRaw extends StatefulWidget {
     this.maxWidth = 350,
     this.direction,
     this.items = const [],
-    this.iconBackground,
-    this.activeColor,
-    this.iconColor,
     this.selectedIndex,
     this.background,
     this.onTap,
     this.expand = true,
     this.isStatic = false,
-    this.collapsedTextStyle,
-    this.expandedTextStyle,
-    this.iconSize,
     this.onChange,
+    this.builder,
+    this.cursorSize,
+    this.railTileConfig,
   }) : super(key: key);
 
   @override
@@ -98,6 +91,8 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   ValueNotifier<int> selectedIndexNotifier = ValueNotifier(0);
   late InterpolateConfig config;
   final GlobalKey _railKey = GlobalKey();
+  final GlobalKey _containerKey = GlobalKey();
+
   late TextDirection? direction;
   @override
   void initState() {
@@ -228,6 +223,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
       left: direction == TextDirection.ltr ? 0 : null,
       right: direction == TextDirection.ltr ? null : 0,
       width: width.clamp(widget.width, double.infinity) + 30,
+      key: _containerKey,
       child: Transform.translate(
         offset: Offset(translateX, translateY),
         child: Row(
@@ -274,18 +270,35 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     _runCursorAnimation();
   }
 
-  void _onVerticalDragUpdate(
-      DragUpdateDetails d, double maxHeight, double height) {
+  void _onVerticalDragUpdate(DragUpdateDetails d) {
     if (widget.isStatic) {
       return;
     }
-    var getBox = _railKey.currentContext?.findRenderObject() as RenderBox;
-    var pos = getBox.localToGlobal(Offset.zero);
-    var max = MediaQuery.of(context).size.height;
+    var getBox = _railKey.currentContext?.findRenderObject() as RenderBox?;
+    var pos = getBox?.localToGlobal(Offset.zero) ?? Offset.zero;
+
+    double? parentSize;
+    Element? parentElement;
+    Offset global = Offset.zero;
+    _containerKey.currentContext?.visitAncestorElements((element) {
+      parentSize = element.size?.height;
+      var traverse = parentElement?.widget is! AnimatedRail;
+      if (!traverse) {
+        global = (parentElement?.renderObject as RenderBox?)
+                ?.localToGlobal(Offset.zero) ??
+            Offset.zero;
+      } else {
+        parentElement = element;
+      }
+      return traverse;
+    });
+    parentElement = null;
+    var max = global.dy + (parentSize ?? 0);
+    var height = (getBox?.size.height ?? 0);
     if ((pos.dy + d.delta.dy) + height > max && d.delta.dy > 0) {
       return;
     }
-    if ((pos.dy + d.delta.dy) <= 10 && d.delta.dy < 0) {
+    if ((pos.dy + d.delta.dy) < global.dy && d.delta.dy < 0) {
       return;
     }
     setState(() {
@@ -294,8 +307,6 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
   }
 
   List<Widget> _buildContent(BoxConstraints constraints) {
-    var height = widget.items.length * 100.0;
-    var maxHeight = min(constraints.maxHeight, height);
     var theme = Theme.of(context);
     var direction = widget.direction ?? Directionality.of(context);
     return [
@@ -303,8 +314,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
         onHorizontalDragUpdate: _onHorizontalDragUpdate,
         onHorizontalDragEnd: _onHorizontalDragEnd,
         onHorizontalDragStart: _onHorizontalDragStart,
-        onVerticalDragUpdate: (d) =>
-            _onVerticalDragUpdate(d, constraints.maxHeight, maxHeight),
+        onVerticalDragUpdate: _onVerticalDragUpdate,
         onVerticalDragEnd: (d) {
           _stopCursorAnimation();
         },
@@ -333,8 +343,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
           onHorizontalDragUpdate: _onHorizontalDragUpdate,
           onHorizontalDragEnd: _onHorizontalDragEnd,
           onHorizontalDragStart: _onHorizontalDragStart,
-          onVerticalDragUpdate: (d) =>
-              _onVerticalDragUpdate(d, constraints.maxHeight, maxHeight),
+          onVerticalDragUpdate: _onVerticalDragUpdate,
           onVerticalDragEnd: (d) {
             _stopCursorAnimation();
           },
@@ -345,18 +354,19 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
             _stopCursorAnimation();
           },
           child: Container(
-              height: 100,
-              width: 100,
+              height: widget.cursorSize?.height ?? 100,
+              width: widget.cursorSize?.width ?? 100,
               child: RotatedBox(
                 quarterTurns: direction == TextDirection.rtl ? 2 : 0,
                 child: ValueListenableBuilder(
                     valueListenable: animationNotifier,
                     builder: (cx, double value, _) => CustomPaint(
                             painter: PointerPainter(
+                          pointerHeight: widget.cursorSize?.height ?? 100,
                           animation: value,
                           color: widget.background ?? theme.primaryColor,
-                          arrowTintColor:
-                              widget.activeColor ?? theme.secondaryHeaderColor,
+                          arrowTintColor: widget.railTileConfig?.activeColor ??
+                              theme.secondaryHeaderColor,
                         ))),
               )),
         ),
@@ -377,19 +387,23 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
             children: items.asMap().entries.map((entry) {
               var item = entry.value;
               var index = entry.key;
+              if (widget.builder != null) {
+                return widget.builder!(
+                    context, index, item, currentSelectedIndex == index);
+              }
               return RailTile(
                 widthPercentage: percentage,
                 direction: direction,
                 icon: item.icon,
                 backgroundColor: (item.background ??
-                    widget.iconBackground ??
+                    widget.railTileConfig?.iconBackground ??
                     theme.textSelectionTheme.selectionColor),
                 iconColor: currentSelectedIndex == index
                     ? (item.activeColor ??
-                        widget.activeColor ??
+                        widget.railTileConfig?.activeColor ??
                         theme.primaryColor)
                     : (item.iconColor ??
-                        widget.iconColor ??
+                        widget.railTileConfig?.iconColor ??
                         theme.textTheme.headline1?.color ??
                         Colors.black),
                 onTap: () {
@@ -399,10 +413,11 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                   selectedIndexNotifier.value = index;
                 },
                 label: item.label,
-                collapsedTextStyle: widget.collapsedTextStyle,
-                expandedTextStyle: widget.expandedTextStyle,
-                iconSize: widget.iconSize,
+                collapsedTextStyle: widget.railTileConfig?.collapsedTextStyle,
+                expandedTextStyle: widget.railTileConfig?.expandedTextStyle,
+                iconSize: widget.railTileConfig?.iconSize,
                 minWidth: widget.width,
+                // config: RailTileConfig(),
               );
             }).toList(),
           );
