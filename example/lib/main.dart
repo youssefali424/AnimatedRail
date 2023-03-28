@@ -154,6 +154,7 @@ class NewCustomizations extends StatelessWidget {
             background: Colors.indigo[300],
             maxWidth: 175,
             width: 60,
+            direction: TextDirection.rtl,
             railTileConfig: RailTileConfig(
               iconSize: 22,
               iconColor: Colors.white,

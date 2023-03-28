@@ -230,13 +230,12 @@ class AnimatedRailRawState extends State<AnimatedRailRaw>
       width: width.clamp(widget.width, double.infinity) + 30,
       key: _containerKey,
       child: Transform.translate(
-        offset: Offset(translateX, translateY),
+        offset: Offset(
+            translateX * (direction == TextDirection.ltr ? 1 : -1), translateY),
         child: Row(
           key: _railKey,
           mainAxisSize: MainAxisSize.max,
-          children: direction == TextDirection.rtl
-              ? content.reversed.toList()
-              : content,
+          children: content,
         ),
       ),
     );

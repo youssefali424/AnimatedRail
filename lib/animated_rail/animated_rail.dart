@@ -10,7 +10,7 @@ class AnimatedRail extends StatefulWidget {
   final double maxWidth;
 
   /// direction of rail if it is on the right or left
-  final TextDirection direction;
+  final TextDirection? direction;
 
   /// the tabs of the rail as a list of object type [RailItem]
   final List<RailItem> items;
@@ -44,7 +44,7 @@ class AnimatedRail extends StatefulWidget {
     Key? key,
     this.width = 100,
     this.maxWidth = 350,
-    this.direction = TextDirection.ltr,
+    this.direction,
     this.items = const [],
     this.selectedIndex,
     this.background,
@@ -84,41 +84,45 @@ class AnimatedRailState extends State<AnimatedRail> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      type: MaterialType.card,
-      child: Container(
-        child: LayoutBuilder(
-          builder: (cx, constraints) {
-            var items = widget.items;
-            return Stack(
-              alignment: widget.direction == TextDirection.ltr
-                  ? Alignment.centerLeft
-                  : Alignment.centerRight,
-              children: [
-                ValueListenableBuilder(
-                  valueListenable: selectedIndexNotifier,
-                  builder: (cx, int? index, _) =>
-                      items.isNotEmpty ? items[index ?? 0].screen : Container(),
-                ),
-                AnimatedRailRaw(
-                  constraints: constraints,
-                  items: widget.items,
-                  width: widget.width,
-                  background: widget.background,
-                  direction: widget.direction,
-                  maxWidth: widget.maxWidth,
-                  selectedIndex: widget.selectedIndex,
-                  onTap: _changeIndex,
-                  expand: widget.expand,
-                  isStatic: widget.isStatic,
-                  railTileConfig: widget.railTileConfig,
-                  builder: widget.builder,
-                  cursorSize: widget.cursorSize,
-                  cursorActionType: widget.cursorActionType,
-                )
-              ],
-            );
-          },
+    return Directionality(
+      textDirection: widget.direction ?? Directionality.of(context),
+      child: Material(
+        type: MaterialType.card,
+        child: Container(
+          child: LayoutBuilder(
+            builder: (cx, constraints) {
+              var items = widget.items;
+              return Stack(
+                alignment: widget.direction == TextDirection.ltr
+                    ? Alignment.centerLeft
+                    : Alignment.centerRight,
+                children: [
+                  ValueListenableBuilder(
+                    valueListenable: selectedIndexNotifier,
+                    builder: (cx, int? index, _) => items.isNotEmpty
+                        ? items[index ?? 0].screen
+                        : Container(),
+                  ),
+                  AnimatedRailRaw(
+                    constraints: constraints,
+                    items: widget.items,
+                    width: widget.width,
+                    background: widget.background,
+                    direction: widget.direction,
+                    maxWidth: widget.maxWidth,
+                    selectedIndex: widget.selectedIndex,
+                    onTap: _changeIndex,
+                    expand: widget.expand,
+                    isStatic: widget.isStatic,
+                    railTileConfig: widget.railTileConfig,
+                    builder: widget.builder,
+                    cursorSize: widget.cursorSize,
+                    cursorActionType: widget.cursorActionType,
+                  )
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
