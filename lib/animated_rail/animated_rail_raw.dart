@@ -80,10 +80,10 @@ class AnimatedRailRaw extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AnimatedRailRawState createState() => _AnimatedRailRawState();
+  AnimatedRailRawState createState() => AnimatedRailRawState();
 }
 
-class _AnimatedRailRawState extends State<AnimatedRailRaw>
+class AnimatedRailRawState extends State<AnimatedRailRaw>
     with TickerProviderStateMixin {
   late Animation<double> _animation;
   late AnimationController _controller;
@@ -423,7 +423,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                         theme.primaryColor)
                     : (item.iconColor ??
                         widget.railTileConfig?.iconColor ??
-                        theme.textTheme.headline1?.color ??
+                        theme.textTheme.displayLarge?.color ??
                         Colors.black),
                 onTap: () {
                   widget.onTap?.call(index);

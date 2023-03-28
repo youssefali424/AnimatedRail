@@ -58,10 +58,10 @@ class AnimatedRail extends StatefulWidget {
         super(key: key);
 
   @override
-  _AnimatedRailState createState() => _AnimatedRailState();
+  AnimatedRailState createState() => AnimatedRailState();
 }
 
-class _AnimatedRailState extends State<AnimatedRail> {
+class AnimatedRailState extends State<AnimatedRail> {
   // int selectedIndex = 0;
   ValueNotifier<int> selectedIndexNotifier = ValueNotifier(0);
 
