@@ -151,16 +151,17 @@ class NewCustomizations extends StatelessWidget {
         AppBar(),
         Expanded(
           child: AnimatedRail(
-            background: Colors.indigo,
-            maxWidth: 275,
-            width: 100,
+            background: Colors.indigo[300],
+            maxWidth: 200,
+            width: 60,
             railTileConfig: RailTileConfig(
-              iconSize: 18,
+              iconSize: 22,
               iconColor: Colors.white,
-              expandedTextStyle: TextStyle(fontSize: 25, color: Colors.white),
+              expandedTextStyle: TextStyle(fontSize: 15),
               collapsedTextStyle: TextStyle(fontSize: 12, color: Colors.white),
-              activeColor: Colors.purple,
+              activeColor: Colors.indigo,
               iconPadding: EdgeInsets.all(0),
+              hideCollapsedText: true,
             ),
             cursorSize: Size(70, 70),
             items: [

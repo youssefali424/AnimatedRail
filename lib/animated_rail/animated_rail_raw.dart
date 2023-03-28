@@ -417,7 +417,9 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
                 expandedTextStyle: widget.railTileConfig?.expandedTextStyle,
                 iconSize: widget.railTileConfig?.iconSize,
                 minWidth: widget.width,
-                // config: RailTileConfig(),
+                iconPadding: widget.railTileConfig?.iconPadding,
+                hideCollapsedText:
+                    widget.railTileConfig?.hideCollapsedText ?? false,
               );
             }).toList(),
           );

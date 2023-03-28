@@ -56,6 +56,10 @@ class RailTileConfig {
 
   /// default inactive icon and text color if the [RailItem] doesn't have one
   final Color? iconColor;
+
+  /// hide [RailItem.label] label when the rail is collapsed
+  final bool? hideCollapsedText;
+
   const RailTileConfig({
     this.iconBackground,
     this.activeColor,
@@ -64,5 +68,6 @@ class RailTileConfig {
     this.expandedTextStyle,
     this.iconSize,
     this.iconPadding,
+    this.hideCollapsedText,
   });
 }

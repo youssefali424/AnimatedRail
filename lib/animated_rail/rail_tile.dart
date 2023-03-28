@@ -13,6 +13,7 @@ class RailTile extends StatelessWidget {
   final double minWidth;
   final double widthPercentage;
   final EdgeInsetsGeometry? iconPadding;
+  final bool hideCollapsedText;
   const RailTile({
     Key? key,
     required this.direction,
@@ -27,6 +28,7 @@ class RailTile extends StatelessWidget {
     required this.minWidth,
     required this.widthPercentage,
     this.iconPadding,
+    this.hideCollapsedText = false,
   }) : super(key: key);
 
   @override
@@ -51,6 +53,7 @@ class RailTile extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
                       child: Container(
@@ -59,7 +62,6 @@ class RailTile extends StatelessWidget {
                           color: backgroundColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        margin: const EdgeInsets.only(bottom: 5),
                         padding: iconPadding ??
                             const EdgeInsets.symmetric(vertical: 10),
                         child: IconTheme(
@@ -69,25 +71,27 @@ class RailTile extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Transform.translate(
-                      offset: Offset(0, widthPercentage * -25),
-                      child: Opacity(
-                        opacity: 1 - widthPercentage,
-                        child: Text(
-                          label ?? '',
-                          style: collapsedTextStyle?.merge(TextStyle(
-                                  fontSize: collapsedTextStyle?.fontSize ?? 15,
-                                  color: collapsedTextStyle?.color ??
-                                      iconColor)) ??
-                              TextStyle(
-                                color: iconColor,
-                                fontSize: 15,
-                              ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                    if (!hideCollapsedText)
+                      Transform.translate(
+                        offset: Offset(0, widthPercentage * -25),
+                        child: Opacity(
+                          opacity: 1 - widthPercentage,
+                          child: Text(
+                            label ?? '',
+                            style: collapsedTextStyle?.merge(TextStyle(
+                                    fontSize:
+                                        collapsedTextStyle?.fontSize ?? 15,
+                                    color: collapsedTextStyle?.color ??
+                                        iconColor)) ??
+                                TextStyle(
+                                  color: iconColor,
+                                  fontSize: 15,
+                                ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                    )
+                      )
                   ],
                 ),
               ),
@@ -95,9 +99,11 @@ class RailTile extends StatelessWidget {
             Positioned.directional(
               child: Opacity(
                 opacity: widthPercentage,
-                child: Container(
-                  height: 100,
-                  padding: const EdgeInsets.only(bottom: 25),
+                child: Padding(
+                  padding: hideCollapsedText
+                      ? EdgeInsets.zero
+                      : EdgeInsets.only(
+                          bottom: (collapsedTextStyle?.fontSize ?? 15) + 10),
                   child: Center(
                     child: Text(
                       label ?? '',
@@ -111,6 +117,8 @@ class RailTile extends StatelessWidget {
               ),
               start: widthPercentage * minWidth,
               textDirection: direction,
+              top: 0,
+              bottom: 0,
             )
           ],
         ),
