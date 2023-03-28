@@ -35,6 +35,11 @@ class AnimatedRail extends StatefulWidget {
 
   /// config for rail tile
   final RailTileConfig? railTileConfig;
+
+  /// the type of cursor action to use
+  /// default to [CursorActionType.drag] only
+  final CursorActionTrigger cursorActionType;
+
   const AnimatedRail({
     Key? key,
     this.width = 100,
@@ -48,6 +53,7 @@ class AnimatedRail extends StatefulWidget {
     this.builder,
     this.cursorSize,
     this.railTileConfig,
+    this.cursorActionType = CursorActionTrigger.drag,
   })  : assert(expand && maxWidth > width),
         super(key: key);
 
@@ -108,6 +114,7 @@ class _AnimatedRailState extends State<AnimatedRail> {
                   railTileConfig: widget.railTileConfig,
                   builder: widget.builder,
                   cursorSize: widget.cursorSize,
+                  cursorActionType: widget.cursorActionType,
                 )
               ],
             );

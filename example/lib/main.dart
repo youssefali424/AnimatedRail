@@ -102,8 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
         railTileConfig: RailTileConfig(
           iconSize: 30,
           iconColor: Colors.black,
-          expandedTextStyle: TextStyle(fontSize: 25),
-          collapsedTextStyle: TextStyle(fontSize: 17),
+          expandedTextStyle: TextStyle(fontSize: 20),
+          collapsedTextStyle: TextStyle(fontSize: 12),
           activeColor: Colors.purple,
           iconBackground: Colors.white,
         ),
@@ -152,7 +152,7 @@ class NewCustomizations extends StatelessWidget {
         Expanded(
           child: AnimatedRail(
             background: Colors.indigo[300],
-            maxWidth: 200,
+            maxWidth: 175,
             width: 60,
             railTileConfig: RailTileConfig(
               iconSize: 22,
@@ -160,10 +160,11 @@ class NewCustomizations extends StatelessWidget {
               expandedTextStyle: TextStyle(fontSize: 15),
               collapsedTextStyle: TextStyle(fontSize: 12, color: Colors.white),
               activeColor: Colors.indigo,
-              iconPadding: EdgeInsets.all(0),
+              iconPadding: EdgeInsets.symmetric(vertical: 5),
               hideCollapsedText: true,
             ),
             cursorSize: Size(70, 70),
+            cursorActionType: CursorActionTrigger.clickAndDrag,
             items: [
               RailItem(
                   icon: Icon(Icons.home),

@@ -56,6 +56,10 @@ class AnimatedRailRaw extends StatefulWidget {
   /// config for rail tile
   final RailTileConfig? railTileConfig;
 
+  /// the type of cursor action to use
+  /// default to [CursorActionType.drag] only
+  final CursorActionTrigger cursorActionType;
+
   const AnimatedRailRaw({
     Key? key,
     this.constraints = const BoxConstraints(),
@@ -72,6 +76,7 @@ class AnimatedRailRaw extends StatefulWidget {
     this.builder,
     this.cursorSize,
     this.railTileConfig,
+    this.cursorActionType = CursorActionTrigger.drag,
   }) : super(key: key);
 
   @override
@@ -142,7 +147,7 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
     var point = value + 0.2 * velocity;
     var deltas = points.map((p) => (point - p).abs()).toList();
     var minDelta = deltas.reduce(min);
-    return points.where((p) => (point - p).abs() == minDelta).toList()[0];
+    return points.firstWhere((p) => (point - p).abs() == minDelta);
   }
 
   void _runAnimation() {
@@ -340,6 +345,20 @@ class _AnimatedRailRawState extends State<AnimatedRailRaw>
       ),
       Flexible(
         child: GestureDetector(
+          onTap: () {
+            if (widget.cursorActionType == CursorActionTrigger.clickAndDrag) {
+              if (width <= 0.1) {
+                velocity = widget.width * 5;
+                _runAnimation();
+              } else if (width == widget.width) {
+                velocity = -widget.width * 5;
+                _runAnimation();
+              } else if (width == widget.maxWidth) {
+                velocity = (widget.width - widget.maxWidth) * 5;
+                _runAnimation();
+              }
+            }
+          },
           onHorizontalDragUpdate: _onHorizontalDragUpdate,
           onHorizontalDragEnd: _onHorizontalDragEnd,
           onHorizontalDragStart: _onHorizontalDragStart,

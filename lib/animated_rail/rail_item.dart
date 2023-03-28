@@ -71,3 +71,11 @@ class RailTileConfig {
     this.hideCollapsedText,
   });
 }
+
+enum CursorActionTrigger {
+  ///when expanded or totally collapsed
+  ///use click to toggle the rail as well as dragging
+  clickAndDrag,
+  ///only user dragging to toggle the rail
+  drag,
+}
