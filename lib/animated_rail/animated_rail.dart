@@ -54,7 +54,7 @@ class AnimatedRail extends StatefulWidget {
     this.cursorSize,
     this.railTileConfig,
     this.cursorActionType = CursorActionTrigger.drag,
-  })  : assert(expand && maxWidth > width),
+  })  : assert(!expand || maxWidth > width),
         super(key: key);
 
   @override

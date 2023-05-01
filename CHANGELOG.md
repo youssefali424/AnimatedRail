@@ -1,3 +1,5 @@
+## [2.0.2] - major upgrade.
+- fix ![#6](https://github.com/youssefali424/AnimatedRail/issues/6)
 ## [2.0.1] - major upgrade.
 - fix rtl direction issues
 
